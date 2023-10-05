@@ -62,18 +62,24 @@
 void cnn_blocked_kernel(
     cnndata_t BufI[TN][TR * S_WTS + K_WTS - S_WTS][TC * S_WTS + K_WTS - S_WTS],
     cnndata_t BufO[TM][TR][TC], cnndata_t BufW[TM][TN][K_WTS][K_WTS]) {
+#pragma HLS ARRAY_PARTITION dim=3 factor=4 type=block variable=BufW
+#pragma HLS ARRAY_PARTITION dim=4 factor=4 type=block variable=BufW
+#pragma HLS ARRAY_PARTITION dim=2 factor=7 type=block variable=BufI
+#pragma HLS ARRAY_PARTITION dim=3 factor=7 type=block variable=BufI
+
   index_t to_b, ti_b, row_b, col_b;
 
-Row:
-  for (row_b = 0; row_b < TR; row_b++) {
-  Col:
-    for (col_b = 0; col_b < TC; col_b++) {
-    To:
-      for (to_b = 0; to_b < TM; to_b++) {
-      Ti:
-        for (ti_b = 0; ti_b < TN; ti_b++) {
-          index_t i, j;
 
+Col:
+  for (col_b = 0; col_b < TC; col_b++) {
+    To:
+	  for (to_b = 0; to_b < TM; to_b++) {
+        Ti:
+#pragma HLS PIPELINE
+    for (ti_b = 0; ti_b < TN; ti_b++) {
+       index_t i, j;
+    Row:
+      for (row_b = 0; row_b < TR; row_b++) {
         Krow:
           for (i = 0; i < K_WTS; i++) {
           Kcol:
