@@ -51,7 +51,7 @@ typedef uint32_t index_t;
 #define TR (4) // output row
 #define TC (4) // output column
 #define TM (4) // output depth
-#define TN (4) // input depth
+#define TN (7) // input depth
 
 /*
  * Access macros for the input and output buffers.
