@@ -62,12 +62,15 @@
 void cnn_blocked_kernel(
     cnndata_t BufI[TN][TR * S_WTS + K_WTS - S_WTS][TC * S_WTS + K_WTS - S_WTS],
     cnndata_t BufO[TM][TR][TC], cnndata_t BufW[TM][TN][K_WTS][K_WTS]) {
+#pragma HLS INTERFACE mode=ap_memory port=BufW
+#pragma HLS INTERFACE mode=ap_memory port=BufI
 #pragma HLS ARRAY_RESHAPE dim=2 type=complete variable=BufW
 #pragma HLS ARRAY_PARTITION dim=3 factor=4 type=block variable=BufW
 #pragma HLS ARRAY_PARTITION dim=4 factor=4 type=block variable=BufW
 #pragma HLS ARRAY_RESHAPE dim=1 type=complete variable=BufI
-#pragma HLS ARRAY_PARTITION dim=2 type=complete variable=BufI
-#pragma HLS ARRAY_PARTITION dim=3 type=complete variable=BufI
+#pragma HLS ARRAY_PARTITION dim=2 type=block factor=7 variable=BufI
+#pragma HLS ARRAY_PARTITION dim=3 type=block factor=7 variable=BufI
+
   index_t to_b, ti_b, row_b, col_b;
 
 Row:
@@ -94,7 +97,6 @@ Row:
     }
   }
 }
-
 
 static inline void fetchNewColumn(
     cnndata_t window[K_WTS][K_WTS],
