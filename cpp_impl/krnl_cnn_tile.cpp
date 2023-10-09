@@ -65,7 +65,6 @@ void cnn_blocked_kernel(
 #pragma HLS ARRAY_RESHAPE dim=2 type=complete variable=BufW
 #pragma HLS ARRAY_PARTITION dim=3 factor=4 type=block variable=BufW
 #pragma HLS ARRAY_PARTITION dim=4 factor=4 type=block variable=BufW
-#pragma HLS ARRAY_PARTITION dim=1 type=complete variable=BufO
 #pragma HLS ARRAY_RESHAPE dim=2 type=complete variable=BufI
 #pragma HLS ARRAY_RESHAPE dim=3 type=complete variable=BufI
   index_t to_b, ti_b, row_b, col_b;
@@ -74,10 +73,10 @@ Row:
   for (row_b = 0; row_b < TR; row_b++) {
   Col:
     for (col_b = 0; col_b < TC; col_b++) {
-#pragma HLS PIPELINE
     To:
       for (to_b = 0; to_b < TM; to_b++) {
-      Ti:
+#pragma HLS PIPELINE
+     Ti:
         for (ti_b = 0; ti_b < TN; ti_b++) {
           index_t i, j;
         Krow:
