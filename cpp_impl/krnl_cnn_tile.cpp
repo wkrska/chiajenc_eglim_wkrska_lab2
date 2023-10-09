@@ -65,8 +65,9 @@ void cnn_blocked_kernel(
 #pragma HLS ARRAY_RESHAPE dim=2 type=complete variable=BufW
 #pragma HLS ARRAY_PARTITION dim=3 factor=4 type=block variable=BufW
 #pragma HLS ARRAY_PARTITION dim=4 factor=4 type=block variable=BufW
-#pragma HLS ARRAY_RESHAPE dim=2 type=complete variable=BufI
-#pragma HLS ARRAY_RESHAPE dim=3 type=complete variable=BufI
+#pragma HLS ARRAY_RESHAPE dim=1 type=complete variable=BufI
+#pragma HLS ARRAY_PARTITION dim=2 type=complete variable=BufI
+#pragma HLS ARRAY_PARTITION dim=3 type=complete variable=BufI
   index_t to_b, ti_b, row_b, col_b;
 
 Row:
@@ -83,7 +84,7 @@ Row:
           for (i = 0; i < K_WTS; i++) {
           Kcol:
             for (j = 0; j < K_WTS; j++) {
-              BufO[to_b][row_b][col_b] +=
+            	BufO[to_b][row_b][col_b] +=
                   BufW[to_b][ti_b][i][j] *
                   BufI[ti_b][S_WTS * row_b + i][S_WTS * col_b + j];
             }
