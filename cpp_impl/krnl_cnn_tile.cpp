@@ -67,7 +67,7 @@ void cnn_blocked_kernel(
 #pragma HLS ARRAY_RESHAPE dim=2 type=complete variable=BufW
 #pragma HLS ARRAY_PARTITION dim=3 factor=4 type=block variable=BufW
 #pragma HLS ARRAY_PARTITION dim=4 factor=4 type=block variable=BufW
-#pragma HLS ARRAY_RESHAPE dim=1 type=complete variable=BufI
+// #pragma HLS ARRAY_RESHAPE dim=1 type=block factor=8 variable=BufI
 #pragma HLS ARRAY_PARTITION dim=2 type=block factor=7 variable=BufI
 #pragma HLS ARRAY_PARTITION dim=3 type=block factor=7 variable=BufI
 
@@ -97,6 +97,7 @@ Row:
     }
   }
 }
+
 
 static inline void fetchNewColumn(
     cnndata_t window[K_WTS][K_WTS],
